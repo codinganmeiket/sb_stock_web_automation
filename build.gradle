@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.stockbit'
+version = '1.0'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-java
+    implementation 'io.cucumber:cucumber-java:7.33.0'
+
+    // Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber7-jvm
+    implementation 'io.qameta.allure:allure-cucumber7-jvm:2.32.0'
+
+    // Source: https://mvnrepository.com/artifact/io.qameta.allure/allure-junit-platform
+    implementation 'io.qameta.allure:allure-junit-platform:2.32.0'
+
+    // Source: https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
+    implementation 'io.github.bonigarcia:webdrivermanager:6.3.3'
+
+    // Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    implementation 'org.seleniumhq.selenium:selenium-java:4.40.0'
+
+    // Source: https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java
+    implementation 'io.github.cdimascio:dotenv-java:3.2.0'
+}
+
+test {
+    enabled = false
+}
+
+tasks.register('cucumber', JavaExec) {
+    group = "verification"
+    description = "Runs Cucumber feature files directly"
+
+    mainClass = "io.cucumber.core.cli.Main"
+    classpath = sourceSets.test.runtimeClasspath
+
+    jvmArgs = ['-Xmx2g', '-XX:+TieredCompilation', '-XX:TieredStopAtLevel=1']
+
+    def cucumberArgs = [
+            '--plugin', 'pretty',
+            '--plugin', 'html:build/reports/cucumber.html',
+            '--glue', 'stockbit',
+            'src/test/resources/features',
+            '--threads', "${Runtime.runtime.availableProcessors()}"
+    ]
+
+    if (System.getProperty("cucumber.filter.tags")) {
+        cucumberArgs.add("--tags")
+        cucumberArgs.add(System.getProperty("cucumber.filter.tags"))
+    }
+
+    args = cucumberArgs
+
+    systemProperties = System.getProperties() as Map<String, ? extends Object>
+}
