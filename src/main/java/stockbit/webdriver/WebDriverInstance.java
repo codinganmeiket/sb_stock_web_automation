@@ -43,7 +43,7 @@ public class WebDriverInstance {
 
     webDriver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
     webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-    webDriver.get("https://your-web-to-test.com");
+    webDriver.get("https://web-test-challenges.dikacore.dev/");
   }
 
   /**
