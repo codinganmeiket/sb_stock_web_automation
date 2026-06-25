@@ -18,14 +18,16 @@ public class LoginSteps {
 
   }
 
-  @When("I enter username from env {string}")
-  public void iEnterUsernameFromEnv(String envKey){
-    loginPage.enterUsername(Utils.getEnv(envKey));
+  @When("I enter username {string}")
+  public void iEnterUsername(String envKey){
+    // loginPage.enterUsername(Utils.getEnv(envKey));
+    loginPage.enterUsername(Utils.getEnv(envKey).isEmpty()? envKey : Utils.getEnv(envKey));
   }
 
-  @And("I enter password from env {string}")
-  public void iEnterPasswordFromEnv(String envKey){
-    loginPage.enterPassword(Utils.getEnv(envKey));
+  @And("I enter password {string}")
+  public void iEnterPassword(String envKey){
+    // loginPage.enterPassword(Utils.getEnv(envKey));
+    loginPage.enterPassword(Utils.getEnv(envKey).isEmpty()? envKey : Utils.getEnv(envKey));
   }
 
   @And("I click the login button")
@@ -36,5 +38,10 @@ public class LoginSteps {
   @Then("I should be redirected to the dashboard")
   public void iShouldBeRedirectedToTheDashboard(){
     dashboardPage.assertDashboardIsVisible();
+  }
+
+  @Then("I get login error message")
+  public void iGetLoginErrorMessage(){
+    loginPage.assertLoginErrorIsVisible();
   }
 }
